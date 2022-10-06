@@ -18,15 +18,15 @@ CONNECTION_RETURN_CODE = [
 def parseArgs():
   parser = argparse.ArgumentParser(description='Send MQTT payload received from a topic to firebase.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-  parser.add_argument('-m', '--mqtt-host',   dest='host',        action="store",       default="127.0.0.1",    help='Specify the MQTT host to connect to.', **environ_or_required('MQTT_HOST'))
+  parser.add_argument('-m', '--mqtt-host',   dest='host',        action="store",       help='Specify the MQTT host to connect to.',                         **environ_or_required('MQTT_HOST'))
   parser.add_argument('-u', '--username',    dest='username',    action="store",       metavar="USERNAME",     help='MQTT boroker login username',          **environ_or_required('MQTT_USER'))
   parser.add_argument('-p', '--password',    dest='password',    action="store",       metavar="$ECRET",       help='MQTT boroker login password',          **environ_or_required('MQTT_PWD'))
-  parser.add_argument('-P', '--port',        dest='port',        action="store",       type=int, default=1883, metavar=1883, help='MQTT boroker port')
+  parser.add_argument('-P', '--port',        dest='port',        action="store",       type=int,               default=1883,                                metavar=1883, help='MQTT boroker port')
   parser.add_argument('-a', '--hash-map',    dest='hashMap',     action="store",       help='Specify the map of MQTT topics to forward.',                   **environ_or_required('MQTT_FORWARDER_HASHMAP'))
   parser.add_argument('-n', '--dry-run',     dest='dryRun',      action="store_true",  default=False,          help='No data will be sent to the MQTT broker.')
-  parser.add_argument('-d', '--destination', dest='destination', action="store",       default="sensor raw",   help='The destination MQTT topic base.',     **environ_or_required('MQTT_DEST_BASE'))
-  parser.add_argument('-t', '--topic',       dest='topic',       action="store",       default="sensor/esp/#", help='The listening MQTT topic.',            **environ_or_required('MQTT_SOURCE_TOPIC'))
-  parser.add_argument('-v', '--verbose',     dest='verbose',     action="store_false", default=True,          help='Enable debug messages.')
+  parser.add_argument('-d', '--destination', dest='destination', action="store",       help='The destination MQTT topic base.',                             **environ_or_required('MQTT_DEST_BASE'))
+  parser.add_argument('-t', '--topic',       dest='topic',       action="store",       help='The listening MQTT topic.',                                    **environ_or_required('MQTT_SOURCE_TOPIC'))
+  parser.add_argument('-v', '--verbose',     dest='verbose',     action="store_false", default=True,           help='Enable debug messages.')
 
   return parser.parse_args()
 

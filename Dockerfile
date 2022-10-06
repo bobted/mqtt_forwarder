@@ -1,7 +1,7 @@
 FROM python:3.9.14
 
 WORKDIR /app
-COPY *.py /app
+COPY *.py *.txt /app/
 
 RUN pip install -r requirements.txt
 
