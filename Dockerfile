@@ -1,4 +1,4 @@
-FROM python:3.9.14
+FROM --platform=linux/arm/v7 arm32v7/python:3.9.14
 
 WORKDIR /app
 COPY *.py *.txt /app/
