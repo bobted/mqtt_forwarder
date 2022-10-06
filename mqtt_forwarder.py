@@ -4,7 +4,7 @@ import os, re, time, json, argparse, signal
 import paho.mqtt.client as mqtt # pip install paho-mqtt
 import urllib.parse
 
-verbose = False
+verbose = True
 
 CONNECTION_RETURN_CODE = [
     "connection successful",
@@ -27,6 +27,7 @@ def parseArgs():
   parser.add_argument('-d', '--destination', dest='destination', action="store",       help='The destination MQTT topic base.',                             **environ_or_required('MQTT_DEST_BASE'))
   parser.add_argument('-t', '--topic',       dest='topic',       action="store",       help='The listening MQTT topic.',                                    **environ_or_required('MQTT_SOURCE_TOPIC'))
   parser.add_argument('-v', '--verbose',     dest='verbose',     action="store_false", default=True,           help='Enable debug messages.')
+  parser.add_argument('-x', '--message-map'  dest='messageMap',  action="store",       help='Specify the map of replacement messages to use per topic',      **environ_or_required('MQTT_MESSAGE_REPLACE_MAP'))
 
   return parser.parse_args()
 
@@ -56,18 +57,23 @@ def on_message(client, userdata, msg):
   if sensorName in hashMap.keys():
     tstamp = int(time.time())
     mqttPath = urllib.parse.urljoin(args.destination + '/', hashMap[sensorName])
-    debug("Received message from {0} with payload {1} to be published to {2}".format(msg.topic, str(msg.payload), mqttPath))
+    debug(f"Received message from '{msg.topic}' with payload '{str(msg.payload)}' to be published to '{mqttPath}'")
     nodeData = msg.payload
-    ##newObject = json.loads(nodeData.decode('utf-8'))
-    ##newObject['time'] = tstamp
-    ##nodeData = json.dumps(newObject)
+
+    if sensorName in messageMap.keys():
+      messageData = nodeData.decode('utf-8')
+      translate = messageMap[sensorName]
+      if messageData in translate.key():
+        translateMessage = translate[messageData]
+        nodeData = translateMessage.encode('utf-8')
+
     if not args.dryRun:
       debug("Sending message...")
       client.publish(mqttPath, nodeData)
     else:
-      debug("Dry run")
+      debug(f"Dry run -- '{nodeData.encode('utf-8')}'")
   else:
-    debug("Received message from {0} with payload {1}. Hash not found in hashMap".format(msg.topic, str(msg.payload)))
+    debug(f"Received message from '{msg.topic}' with payload '{str(msg.payload)}'. Hash not found in hashMap")
 
 if __name__ == '__main__':
   args = parseArgs()
