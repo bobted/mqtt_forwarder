@@ -27,7 +27,7 @@ def parseArgs():
   parser.add_argument('-d', '--destination', dest='destination', action="store",       help='The destination MQTT topic base.',                             **environ_or_required('MQTT_DEST_BASE'))
   parser.add_argument('-t', '--topic',       dest='topic',       action="store",       help='The listening MQTT topic.',                                    **environ_or_required('MQTT_SOURCE_TOPIC'))
   parser.add_argument('-v', '--verbose',     dest='verbose',     action="store_false", default=True,           help='Enable debug messages.')
-  parser.add_argument('-x', '--message-map'  dest='messageMap',  action="store",       help='Specify the map of replacement messages to use per topic',      **environ_or_required('MQTT_MESSAGE_REPLACE_MAP'))
+  parser.add_argument('-x', '--message-map', dest='messageMap',  action="store",       help='Specify the map of replacement messages to use per topic',      **environ_or_required('MQTT_MESSAGE_REPLACE_MAP'))
 
   return parser.parse_args()
 
