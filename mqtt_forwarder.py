@@ -63,7 +63,7 @@ def on_message(client, userdata, msg):
     if sensorName in messageMap.keys():
       messageData = nodeData.decode('utf-8')
       translate = messageMap[sensorName]
-      if messageData in translate.key():
+      if messageData in translate.keys():
         translateMessage = translate[messageData]
         nodeData = translateMessage.encode('utf-8')
 
