@@ -83,6 +83,7 @@ if __name__ == '__main__':
 
   verbose = args.verbose
   hashMap = json.loads(args.hashMap)
+  messageMap = json.loads(args.messageMap)
 
   client = mqtt.Client()
   client.on_connect = on_connect
